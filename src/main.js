@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", ()=>{
     let getElemById = id=>document.getElementById(id);
-
     let ttrpgtime = new TTRPGTime();
 
     let radiobuttons = [];
@@ -26,8 +25,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
     getElemById("short-rest").addEventListener("click", ()=>ttrpgtime.shortRest());
     getElemById("long-rest").addEventListener("click", ()=>ttrpgtime.longRest());
 
+    document.querySelectorAll(".undo").forEach(e=>e.addEventListener("click", ()=>ttrpgtime.undo()));
+
     let timetext = document.querySelector("time");
-    setInterval(()=>timetext.textContent = ttrpgtime, 1);
+    let datetext = getElemById("date");
+
+    setInterval(()=>timetext.textContent = ttrpgtime.toString().split('T')[1], 10);
+    setInterval(()=>datetext.textContent = ttrpgtime.toString().split('T')[0], 10);
+
     setInterval(()=>{
         let colors = ttrpgtime.backgroundColors();
         let gradient = `linear-gradient(0, ${colors[0]} 0%, ${colors[1]} 100%)`;
@@ -40,5 +45,20 @@ document.addEventListener("DOMContentLoaded", ()=>{
     ctx.translate(radius, radius);
     radius *= 0.95;
     setInterval(()=>drawClock(canvas, ctx, radius, ttrpgtime.h, ttrpgtime.m, ttrpgtime.s), 10);
+    
+    function shortcut(e) {
+        let ctrl = e.ctrlKey || e.metaKey;
+        let alt = e.altKey;
+        let shift = e.shiftKey;
+        
+        switch(e.key) {
+            case "z":
+                if(ctrl) ttrpgtime.undo();
+                break;
+            default:
+                return;
+        }
+    }
 
+    document.addEventListener("keydown", shortcut);
 });

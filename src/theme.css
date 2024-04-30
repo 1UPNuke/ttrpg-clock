@@ -70,6 +70,10 @@ input[type=number] {
     width: 5em;
 }
 
+button {
+    cursor: pointer;
+}
+
 #ground {
     display: block;
     position: fixed;
